@@ -16,6 +16,7 @@ Each user only sees their own tasks (filtered by Telegram user_id).
 """
 
 import logging
+import os
 import sqlite3
 from contextlib import closing
 
@@ -29,7 +30,13 @@ from telegram.ext import (
 # ---------------------------------------------------------------------------
 # CONFIG
 # ---------------------------------------------------------------------------
-BOT_TOKEN = "PASTE_YOUR_BOT_TOKEN_HERE"  # from BotFather
+BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "PASTE_YOUR_BOT_TOKEN_HERE").strip()  # from BotFather
+
+# Temporary debug: confirm the token is actually loaded (prints length + first/last few chars only, never the full token)
+if BOT_TOKEN and BOT_TOKEN != "PASTE_YOUR_BOT_TOKEN_HERE":
+    print(f"[DEBUG] Token loaded, length={len(BOT_TOKEN)}, starts='{BOT_TOKEN[:6]}', ends='{BOT_TOKEN[-6:]}'")
+else:
+    print("[DEBUG] TELEGRAM_BOT_TOKEN environment variable is missing or empty!")
 DB_PATH = "todo.db"
 
 logging.basicConfig(
